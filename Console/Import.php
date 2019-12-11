@@ -11,6 +11,7 @@ class Import extends Command
 {
     const FILENAME = 'filename';
     const STOREID = 'storeid';
+    const CATEGORIES = 'categories';
 
     protected $csv;
     protected $directoryList;
@@ -47,6 +48,12 @@ class Import extends Command
 				InputOption::VALUE_REQUIRED,
 				'Store Id. Note: Store ID where blogs will be imported.'
             ),
+            new InputOption(
+				self::CATEGORIES,
+				null,
+				InputOption::VALUE_REQUIRED,
+				'Category IDs to which blog posts will be assigned.'
+            ),
 		];
 
 		$this->setName('mamis:importblogs')
@@ -76,8 +83,10 @@ class Import extends Command
                         $postModel = $objectManager->create(\Magefan\Blog\Model\Post::class);
                         // Store
                         $postModel->setStoreIds([$input->getOption(self::STOREID)]);
-                        // Categories @TODO: dynamic
-                        $postModel->setCategories([3]);
+                        // Categories
+                        // Check if category specified or use category ID 1
+                        $categories = !empty($input->getOption(self::CATEGORIES)) ? $input->getOption(self::CATEGORIES) : 1;
+                        $postModel->setCategories([$categories]);
                         // Title
                         $postModel->setTitle($post[1]);
                         // Content
