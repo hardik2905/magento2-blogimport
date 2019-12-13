@@ -112,6 +112,11 @@ class Import extends Command
                         $tagIds = $this->getPostTagIds($post[13]);
                         $postModel->setTags($tagIds);
 
+                        // Set Author
+                        if (isset($post[15]) && !empty($post[15])) {
+                            $postModel->setAuthorId($post[15]);
+                        }
+
                         $postModel->save();
                     }
                 }
